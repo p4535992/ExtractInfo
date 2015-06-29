@@ -2,6 +2,7 @@ package com.github.p4535992.extractor.object.impl.jdbc.generic;
 
 import com.github.p4535992.extractor.object.dao.jdbc.generic.IGenericDao;
 import com.github.p4535992.util.bean.BeansKit;
+import com.github.p4535992.util.collection.CollectionKit;
 import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +27,8 @@ import java.util.*;
 
 /**
  * Created by 4535992 on 16/04/2015.
+ * @author 4535992
+ * @version 2015-06-26
  */
 public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
     /** {@code org.slf4j.Logger} */
@@ -52,9 +55,10 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
 
     @Override
     public void setDriverManager(String driver, String dialectDB, String host, String port, String user, String pass, String database) {
+        SystemLog.message("DRIVER[:"+driver+"] ,URL[" + dialectDB + "://" + host + ":" + port + "/" + database+"]");
         driverManag = new DriverManagerDataSource();
-        driverManag.setDriverClassName(driver);//"com.sql.jdbc.Driver"
-        driverManag.setUrl("" + dialectDB + "://" + host + ":" + port + "/" + database); //"jdbc:sql://localhost:3306/jdbctest"
+        driverManag.setDriverClassName(driver);//"com.mysql.jdbc.Driver"
+        driverManag.setUrl("" + dialectDB + "://" + host + ":" + port + "/" + database); //"jdbc:mysql://localhost:3306/jdbctest"
         driverManag.setUsername(user);
         driverManag.setPassword(pass);
         this.dataSource = driverManag;
@@ -189,7 +193,7 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
     public void update(String[] columns, Object[] values, String[] columns_where, Object[] values_where){
         try {
             query = prepareUpdateQuery(columns,null,columns_where,null,"AND");
-            Object[] vals = StringKit.concatenateArrays(values,values_where);
+            Object[] vals = CollectionKit.concatenateArrays(values, values_where);
             if(values_where!=null) {
                 jdbcTemplate.update(query, vals);
             }else{
@@ -403,7 +407,7 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
             }
         }
         query +=" FROM "+mySelectTable+" ";
-        if(!StringKit.isArrayEmpty(columns_where)) {
+        if(!CollectionKit.isArrayEmpty(columns_where)) {
             if(values_where==null){
                 statement = true;
                 //values_where = new Object[columns_where.length];
@@ -442,7 +446,7 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
         int f = 0;
         for (int k = 0; k < columns.length; k++) {
             query += columns[k] + "=? ";
-            if(!StringKit.isArrayEmpty(values)) {
+            if(CollectionKit.isArrayEmpty(values)) {
                 if (values[k] == null) {
                     values[f] = "NULL";
                     f++;
@@ -455,7 +459,7 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
                 query += ", ";
             }
         }
-        if(!StringKit.isArrayEmpty(columns_where)) {
+        if(!CollectionKit.isArrayEmpty(columns_where)) {
             if(values_where==null){
                 statement = true;
                 //values_where = new Object[columns_where.length];
@@ -537,7 +541,7 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
 //            final Integer[] types =
 //                    SQLKit.getArrayTypes(cl, javax.persistence.Column.class);
             }else{
-                columns2 = StringKit.copyContentArray(columns);
+                columns2 = CollectionKit.copyContentArray(columns);
             }
 
             final Class<?>[] classes =
@@ -616,7 +620,7 @@ public abstract class GenericDaoImpl<T> implements IGenericDao<T> {
 //            final Integer[] types =
 //                    SQLKit.getArrayTypes(cl, javax.persistence.Column.class);
             }else{
-                columns2 = StringKit.copyContentArray(columns);
+                columns2 = CollectionKit.copyContentArray(columns);
             }
 
             final Class<?>[] classes =
