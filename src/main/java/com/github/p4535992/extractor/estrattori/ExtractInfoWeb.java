@@ -55,6 +55,7 @@ public class ExtractInfoWeb {
     protected ExtractInfoWeb(){}
 
     private boolean tableAlreadyCreated = true;
+    private boolean gateAlreadySetted = true;
 
     /**
      * Constructor.
@@ -110,12 +111,21 @@ public class ExtractInfoWeb {
      */
     public Controller setGate(String directoryFolderHome,String directoryFolderPlugin,
                         String configFileGate,String configFileUser,String configFileSession,String gappFile){
-        Gate8Kit gate8 = Gate8Kit.getInstance();
-       /* this.controller = gate8.setUpGateEmbedded("gate_files", "plugins", "gate.xml", "user-gate.xml", "gate.session",
-                "custom/gapp/geoLocationPipeline06102014v7_fastMode.xgapp");*/
-        this.controller = gate8.setUpGateEmbedded(directoryFolderHome, directoryFolderPlugin,
-                configFileGate, configFileUser, configFileSession, gappFile);
-        return controller;
+        if(controller==null) {
+            if(gateAlreadySetted) {
+                Gate8Kit gate8 = Gate8Kit.getInstance();
+                this.controller = gate8.setUpGateEmbedded(directoryFolderHome, directoryFolderPlugin,
+                        configFileGate, configFileUser, configFileSession, gappFile);
+                gateAlreadySetted = false;
+                return controller;
+            }else{
+                SystemLog.warning("The GATE embedded API is already set with Spring Framework and ProcessorDocument!!!");
+                return null;
+            }
+        }else{
+            SystemLog.warning("The GATE embedded API is already set with Corpus Controller!!!");
+            return controller;
+        }
     }
 
     /**
@@ -127,9 +137,20 @@ public class ExtractInfoWeb {
      */
     public DocumentProcessor setGateWithSpring(
             String pathToTheGateContextFile,String beanNameOfTheProcessorDocument,Class<?> thisClass){
-        Gate8Kit gate8 = Gate8Kit.getInstance();
-        this.procDoc = gate8.setUpGateEmbeddedWithSpring(pathToTheGateContextFile,thisClass,beanNameOfTheProcessorDocument);
-        return procDoc;
+        if(procDoc ==null) {
+            if(gateAlreadySetted) {
+                Gate8Kit gate8 = Gate8Kit.getInstance();
+                this.procDoc = gate8.setUpGateEmbeddedWithSpring(pathToTheGateContextFile, thisClass, beanNameOfTheProcessorDocument);
+                gateAlreadySetted = false;
+                return procDoc;
+            }else{
+                SystemLog.warning("The GATE embedded API is already set with Corpus Controller!!!");
+                return null;
+            }
+        }else {
+            SystemLog.warning("The GATE embedded API is already set with Spring Framework and ProcessorDocument!!!");
+            return procDoc;
+        }
     }
 
 
@@ -378,7 +399,7 @@ public class ExtractInfoWeb {
         if(DIALECT_DATABASE.toLowerCase().contains("oracle")) KARMA_DRIVER ="Oracle";
         else if(DIALECT_DATABASE.toLowerCase().contains("mysql")) KARMA_DRIVER ="MySQL";
         else if(DIALECT_DATABASE.toLowerCase().contains("sql")) KARMA_DRIVER ="SQLServer";
-        else if(DIALECT_DATABASE.toLowerCase().contains("postgis")) KARMA_DRIVER ="PostGIS";
+        else if(DIALECT_DATABASE.toLowerCase().contains("post")) KARMA_DRIVER ="PostGIS";
         else KARMA_DRIVER ="Sybase";
 
         //GENERIAMO IL FILE DI TRIPLE CORRISPONDENTE ALLE INFORMAZIONI ESTRATTE CON KARMA
