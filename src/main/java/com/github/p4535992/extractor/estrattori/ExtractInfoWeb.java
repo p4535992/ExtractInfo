@@ -56,6 +56,17 @@ public class ExtractInfoWeb {
 
     private boolean tableAlreadyCreated = true;
     private boolean gateAlreadySetted = true;
+    private boolean connectionToADatabase = true;
+
+    public boolean isConnectionToADatabase() {
+        return connectionToADatabase;
+    }
+
+    public void setConnectionToADatabase(boolean connectionToADatabase) {
+        this.connectionToADatabase = connectionToADatabase;
+    }
+
+
 
     /**
      * Constructor.
@@ -217,23 +228,25 @@ public class ExtractInfoWeb {
         List<GeoDocument> listGeo = new ArrayList<>();
         try {
             IGeoDocumentDao geoDocumentDao = new GeoDocumentDaoImpl();
-            geoDocumentDao.setDriverManager(DRIVER_DATABASE, DIALECT_DATABASE, HOST_DATABASE,
-                    PORT_DATABASE, USER, PASS, DB_OUTPUT);
-            geoDocumentDao.setTableInsert(TABLE_OUTPUT);
-            geoDocumentDao.setTableSelect(TABLE_INPUT);
-            ExtractorInfoGate8 egate = ExtractorInfoGate8.getInstance();
-            ExtractorGeoDocumentSupport egs = new ExtractorGeoDocumentSupport();
-            ExtractorJSOUP j = new ExtractorJSOUP();
-            if (tableAlreadyCreated) {
-                if (createNewTable) {
-                    try {
-                        geoDocumentDao.create(dropOldTable);
-                        tableAlreadyCreated = false;
-                    } catch (Exception e) {
-                        SystemLog.exception(e);
+            if(connectionToADatabase) {
+                geoDocumentDao.setDriverManager(DRIVER_DATABASE, DIALECT_DATABASE, HOST_DATABASE,
+                        PORT_DATABASE, USER, PASS, DB_OUTPUT);
+                geoDocumentDao.setTableInsert(TABLE_OUTPUT);
+                geoDocumentDao.setTableSelect(TABLE_INPUT);
+                if (tableAlreadyCreated) {
+                    if (createNewTable) {
+                        try {
+                            geoDocumentDao.create(dropOldTable);
+                            tableAlreadyCreated = false;
+                        } catch (Exception e) {
+                            SystemLog.exception(e);
+                        }
                     }
                 }
             }
+            ExtractorInfoGate8 egate = ExtractorInfoGate8.getInstance();
+            ExtractorGeoDocumentSupport egs = new ExtractorGeoDocumentSupport();
+            ExtractorJSOUP j = new ExtractorJSOUP();
             indGDoc = 0;
             GeoDocument geo2 = new GeoDocument();
             GeoDocument geoDoc = new GeoDocument();
@@ -271,11 +284,13 @@ public class ExtractInfoWeb {
                     SystemLog.exception(e);
                 }
             }
-            for (GeoDocument geoDoc3 : listGeo) {
-                if (geoDoc3.getUrl() != null) {
-                    SystemLog.message(geoDoc3.toString());
-                    geoDocumentDao.insertAndTrim(geoDoc3);
-                }//if
+            if(connectionToADatabase) {
+                for (GeoDocument geoDoc3 : listGeo) {
+                    if (geoDoc3.getUrl() != null) {
+                        SystemLog.message(geoDoc3.toString());
+                        geoDocumentDao.insertAndTrim(geoDoc3);
+                    }//if
+                }
             }
         }finally{
             tableAlreadyCreated = true;
@@ -295,23 +310,25 @@ public class ExtractInfoWeb {
     public GeoDocument ExtractGeoDocumentFromUrl(
             URL url, String TABLE_INPUT,String TABLE_OUTPUT,boolean createNewTable,boolean dropOldTable){
         IGeoDocumentDao geoDocumentDao = new GeoDocumentDaoImpl();
-        geoDocumentDao.setDriverManager(DRIVER_DATABASE, DIALECT_DATABASE, HOST_DATABASE,
-                PORT_DATABASE, USER, PASS, DB_OUTPUT);
-        geoDocumentDao.setTableInsert(TABLE_OUTPUT);
-        geoDocumentDao.setTableSelect(TABLE_INPUT);
-        ExtractorInfoGate8 egate = ExtractorInfoGate8.getInstance();
-        ExtractorGeoDocumentSupport egs  = new ExtractorGeoDocumentSupport();
-        ExtractorJSOUP j = new ExtractorJSOUP();
-        if(tableAlreadyCreated) {
-            if (createNewTable) {
-                try {
-                    geoDocumentDao.create(dropOldTable);
-                    tableAlreadyCreated = false;
-                } catch (Exception e) {
-                    SystemLog.exception(e);
+        if(connectionToADatabase) {
+            geoDocumentDao.setDriverManager(DRIVER_DATABASE, DIALECT_DATABASE, HOST_DATABASE,
+                    PORT_DATABASE, USER, PASS, DB_OUTPUT);
+            geoDocumentDao.setTableInsert(TABLE_OUTPUT);
+            geoDocumentDao.setTableSelect(TABLE_INPUT);
+            if(tableAlreadyCreated) {
+                if (createNewTable) {
+                    try {
+                        geoDocumentDao.create(dropOldTable);
+                        tableAlreadyCreated = false;
+                    } catch (Exception e) {
+                        SystemLog.exception(e);
+                    }
                 }
             }
         }
+        ExtractorInfoGate8 egate = ExtractorInfoGate8.getInstance();
+        ExtractorGeoDocumentSupport egs  = new ExtractorGeoDocumentSupport();
+        ExtractorJSOUP j = new ExtractorJSOUP();
         indGDoc = 0;
         GeoDocument geo2 = new GeoDocument();
         GeoDocument geoDoc = new GeoDocument();
@@ -348,9 +365,11 @@ public class ExtractInfoWeb {
                 } catch (URISyntaxException e) {
                     SystemLog.exception(e);
                 }
-                if (geoDoc.getUrl() != null) {
-                    SystemLog.message(geoDoc.toString());
-                    geoDocumentDao.insertAndTrim(geoDoc);
+                if(connectionToADatabase) {
+                    if (geoDoc.getUrl() != null) {
+                        SystemLog.message(geoDoc.toString());
+                        geoDocumentDao.insertAndTrim(geoDoc);
+                    }
                 }//if
             }
         }catch(IOException|InterruptedException e ){
