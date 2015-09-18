@@ -1,21 +1,22 @@
 package com.github.p4535992.extractor.hibernate;
-import org.hibernate.*;
-import org.hibernate.InstantiationException;
-import org.hibernate.criterion.Criterion;
+
 import com.github.p4535992.util.log.SystemLog;
 import com.github.p4535992.util.reflection.ReflectionKit;
 import com.github.p4535992.util.string.StringKit;
+import org.hibernate.*;
+import org.hibernate.InstantiationException;
+import org.hibernate.criterion.Criterion;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 
 /**
  * Little Class for help with first steps to Hibernate
@@ -24,23 +25,23 @@ import javax.transaction.Transactional;
  * @version 2015-09-15.
  */
 @SuppressWarnings("unused")
-public class Hibernate4Kit<T> {
+public class Hibernate43Kit<T> {
 
-    private static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(Hibernate4Kit.class);
+    private static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(Hibernate43Kit.class);
     protected String myInsertTable,mySelectTable,myUpdateTable;
-    protected org.hibernate.SessionFactory sessionFactory;
-    protected org.hibernate.Session session;
-    protected org.hibernate.SessionBuilder sessionBuilder;
+    protected SessionFactory sessionFactory;
+    protected Session session;
+    protected SessionBuilder sessionBuilder;
     protected org.hibernate.service.ServiceRegistry serviceRegistry;
     protected org.hibernate.cfg.Configuration configuration;
     protected File PATH_CFG_HIBERNATE;
     protected boolean cfgXML;
     protected boolean isInterceptor=false;
-    protected org.hibernate.Criteria criteria;
-    protected org.hibernate.Criteria specificCriteria;
-    protected org.hibernate.Transaction trns;
+    protected Criteria criteria;
+    protected Criteria specificCriteria;
+    protected Transaction trns;
     protected org.hibernate.SQLQuery SQLQuery;
-    protected org.hibernate.Query query;
+    protected Query query;
     protected Class<T> cl;
     protected String clName,sql;
     protected Class<? extends Interceptor> interceptor;
@@ -50,19 +51,19 @@ public class Hibernate4Kit<T> {
     protected EntityManager entityManager;
 
     @SuppressWarnings({"unchecked","rawtypes"})
-    public Hibernate4Kit(){
+    public Hibernate43Kit(){
         java.lang.reflect.Type t = getClass().getGenericSuperclass();
         java.lang.reflect.ParameterizedType pt = (java.lang.reflect.ParameterizedType) t;
         this.cl = (Class) pt.getActualTypeArguments()[0];
         this.clName = cl.getSimpleName();
     }
     @SuppressWarnings({"unchecked","rawtypes"})
-    public Hibernate4Kit(Class<T> cl){
+    public Hibernate43Kit(Class<T> cl){
         this.cl = cl;
         this.clName = cl.getSimpleName();
     }
     @SuppressWarnings({"unchecked","rawtypes"})
-    public Hibernate4Kit(Session session,SessionFactory sessionFactory){
+    public Hibernate43Kit(Session session, SessionFactory sessionFactory){
         this.session = session;
         this.sessionFactory = sessionFactory;
         java.lang.reflect.Type t = getClass().getGenericSuperclass();
@@ -113,8 +114,8 @@ public class Hibernate4Kit<T> {
             //sessionFactory = (SessionFactoryImpl) ReflectionKit.invokeGetterClass(inter,"getSessionFactory");
             //setNewInterceptor(interceptor);
         } catch (InstantiationException|IllegalAccessException|java.lang.InstantiationException e) {
-           SystemLog.exception(e); 
-        } 
+           SystemLog.exception(e);
+        }
         return session;
     }
 
@@ -169,7 +170,7 @@ public class Hibernate4Kit<T> {
                 /**deprecated in Hibernate 4.3*/
                 //configuration = new AnnotationConfiguration();
                 configuration = configuration.configure();
-            }catch(org.hibernate.HibernateException e){
+            }catch(HibernateException e){
                 SystemLog.exception(e);
             }
         }
@@ -212,14 +213,14 @@ public class Hibernate4Kit<T> {
      * Method to Get the  SessionFactory.
      * @return sessionFactory the new sessionfactory.
      */
-    public org.hibernate.SessionFactory getSessionFactory() {
+    public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
-    public void setSessionFactory( javax.persistence.EntityManager entityManager){
+    public void setSessionFactory( EntityManager entityManager){
 //        EntityManagerFactory entityManagerFactory =
 //                javax.persistence.Persistence.createEntityManagerFactory("YOUR PU");
-        this.sessionFactory=  entityManager.unwrap(org.hibernate.SessionFactory.class);
+        this.sessionFactory=  entityManager.unwrap(SessionFactory.class);
         //org.hibernate.Session session = sessionFactory.withOptions().interceptor(new MyInterceptor()).openSession();
     }
 
@@ -227,7 +228,7 @@ public class Hibernate4Kit<T> {
      * Method to set the current SessionFactory from external resource.
      * @param sessionFactory the externalSessionFactory.
      */
-    public void setSessionFactory(org.hibernate.SessionFactory sessionFactory)
+    public void setSessionFactory(SessionFactory sessionFactory)
     {
         this.sessionFactory = sessionFactory;
     }
@@ -243,7 +244,7 @@ public class Hibernate4Kit<T> {
      * Method to Get the Session.
      * @return the actual session..
      */
-    public org.hibernate.Session getSession(){
+    public Session getSession(){
         return session;
     }
 
@@ -251,7 +252,7 @@ public class Hibernate4Kit<T> {
      * Method to Set the Session from external resource.
      * @param session set the new session for hibernate.
      */
-    public void setSession(org.hibernate.Session session){
+    public void setSession(Session session){
         this.session = session;
     }
 
@@ -259,8 +260,8 @@ public class Hibernate4Kit<T> {
      * Method to Set the Session from external resource.
      * @param entityManager object entitymaanager can use to set a new Session.
      */
-    public void setSession(javax.persistence.EntityManager entityManager){
-        session = entityManager.unwrap(org.hibernate.Session.class);
+    public void setSession(EntityManager entityManager){
+        session = entityManager.unwrap(Session.class);
     }
 
     public  void setNewEntityManager(){
@@ -269,10 +270,10 @@ public class Hibernate4Kit<T> {
         entityManager = entityManagerFactory.createEntityManager();
     }
 
-    public Connection getConnection(org.hibernate.Session session) {
+    public Connection getConnection(Session session) {
         try {
             if(entityManager != null) {
-                session = (org.hibernate.Session) entityManager.getDelegate();
+                session = (Session) entityManager.getDelegate();
                 org.hibernate.internal.SessionFactoryImpl sessionFactoryImpl =
                         (org.hibernate.internal.SessionFactoryImpl) session.getSessionFactory();
                 connection = sessionFactoryImpl.getConnectionProvider().getConnection();
@@ -283,7 +284,7 @@ public class Hibernate4Kit<T> {
                     public void execute(Connection connection) throws SQLException {
                         //connection, finally!, note: you need a trasnaction
                         //if you are using Spring, @Transactional or TransactionTemplate is enough
-                        Hibernate4Kit.setNewConnection(connection);
+                        Hibernate43Kit.setNewConnection(connection);
                     }
 
                 });
@@ -297,7 +298,7 @@ public class Hibernate4Kit<T> {
         connection = conn;
     }
 
-    public org.hibernate.Session getSession(Connection connection){
+    public Session getSession(Connection connection){
         //SessionBuilder sb = SessionFactory.withOptions();
         //sessionBuilder = SessionFactory.SessionFactoryOptions;
         //this.session = sessionBuilder.connection(connection).openSession();
@@ -380,7 +381,7 @@ public class Hibernate4Kit<T> {
      * This would return the current open session or if this does not exist, will insert a new session.
      * @return the session.
      */
-    public org.hibernate.Session getCurrentSession() {
+    public Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
 
@@ -589,7 +590,7 @@ public class Hibernate4Kit<T> {
     ///////////////////////////////////////////////////////////////////////////////////////////7
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-    public  <T> Serializable insertRow(T object){return null; }
+    /*public  <T> Serializable insertRow(T object){return null; }
     public <T> T selectRow(Serializable id){return null;}
     public List<T> selectRows() {return null;}
     public List<T> selectRows(String nameColumn,int limit,int offset){return null;}
@@ -597,230 +598,270 @@ public class Hibernate4Kit<T> {
     public Serializable updateRow(String whereColumn, Object whereValue) {return null;}
     public Serializable updateRow(T object) {return null;}
     public Serializable deleteRow(String whereColumn, Object whereValue) {return null;}
-    public Serializable deleteRow(T object) {return null;};
+    public Serializable deleteRow(T object) {return null;};*/
 
-//    @javax.transaction.Transactional
-//    public <T> Serializable insertRow(T object) {
-//        Serializable id = null;
-//        try {
-//            openSession();
-//            trns = session.beginTransaction();
-//            session.beginTransaction();
-//            session.save(object);
-//            session.getTransaction().commit();
-//            SystemLog.message("[HIBERNATE] Insert the item:" + object);
-//            id = session.getIdentifier(object);
-//            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return id;
-//    }
-//
-//
-//    public <T> T selectRow(Serializable id){
-//        T object = null;
-//        try {
-//            openSession();
-//            trns = session.beginTransaction();
-//            criteria = session.createCriteria(cl);
-//            //WORK
-//            try {
-//                criteria.add(org.hibernate.criterion.Restrictions.eq("doc_id", id));
-//                List<T> results = criteria.list();
-//                SystemLog.message("[HIBERNATE] Select the item:" + results.get(0));
-//            }catch(Exception e) {
-//                SystemLog.warning("AAAAAAAAAAAA");
-//            }
-//            //NOT WORK
-//            //object = (T) criteria.setFirstResult((Integer) id);
-//            //SystemLog.message("[HIBERNATE] Select the item:" + object.toString());
-//            object = (T) session.load(cl, id);
-//            SystemLog.message("[HIBERNATE] Select the item:" + object.toString());
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return object;
-//    }
-//
-//
-//    @javax.transaction.Transactional
-//    public List<T> selectRows() {
-//        List<T> listT = new ArrayList<>();
-//        try {
-//            openSession();
-//            trns = session.beginTransaction();
-//            if(specificCriteria==null){
-//                criteria = session.createCriteria(cl);
-//            }else{
-//                criteria =specificCriteria;
-//            }
-//            listT = criteria.list();
-//            if(listT.size() == 0){
-//                SystemLog.warning("[HIBERNATE] The returned list is empty!1");
-//            }
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return listT;
-//    }
-//
-//    @javax.transaction.Transactional
-//    public List<T> selectRows(String nameColumn,int limit,int offset) {
-//        List<T> listT = new ArrayList<>();
-//        try {
-//            openSession();
-//            sql = "SELECT "+nameColumn+" FROM "+mySelectTable+"";
-//            SQLQuery = session.createSQLQuery(sql);
-//            query.setFirstResult(offset);
-//            query.setMaxResults(limit);
-//            trns = session.beginTransaction();
-//            criteria = session.createCriteria(cl);
-//            listT = query.list();
-//            if(listT.size() == 0){
-//                SystemLog.warning("[HIBERNATE] The returned list is empty!1");
-//            }
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return listT;
-//    }
-//
-//
-//    @javax.transaction.Transactional
-//    public int getCount() {
-//        Object result = null;
-//        try {
-//            openSession();
-//            trns = session.beginTransaction();
-//            //session.beginTransaction();
-//            criteria = session.createCriteria(cl);
-//            criteria.setProjection(org.hibernate.criterion.Projections.rowCount());
-//            result = criteria.uniqueResult();
-//            SystemLog.message("[HIBERNATE] The count of employees is :" + result);
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return (int)result;
-//    }
-//
-//
-//    @javax.transaction.Transactional
-//    public Serializable updateRow(String whereColumn, Object whereValue) {
-//        Serializable id = null;
-//        try{
-//            openSession();
-//            trns = session.beginTransaction();
-//            //session.beginTransaction();
-//            criteria = session.createCriteria(cl);
-//            criteria.add(org.hibernate.criterion.Restrictions.eq(whereColumn, whereValue));
-//            T t = (T)criteria.uniqueResult();
-//            //t.setName("Abigale");
-//            //t = object;
-//            session.saveOrUpdate(t);
-//            session.getTransaction().commit();
-//            SystemLog.message("[HIBERNATE] Update the item:" + t.toString());
-//            id = session.getIdentifier(t);
-//            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return id;
-//    }
-//
-//
-//    @javax.transaction.Transactional
-//    public Serializable updateRow(T object) {
-//        Serializable id = null;
-//        try{
-//            openSession();
-//            trns = session.beginTransaction();
-//            //session.beginTransaction();
-//            session.saveOrUpdate(object);
-//            session.getTransaction().commit();
-//            SystemLog.message("[HIBERNATE] Update the item:" + object.toString());
-//            id = session.getIdentifier(object);
-//            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return id;
-//    }
-//
-//    @javax.transaction.Transactional
-//    public Serializable deleteRow(String whereColumn, Object whereValue) {
-//        Serializable id = null;
-//        try{
-//            openSession();
-//            trns = session.beginTransaction();
-//            //session.beginTransaction();
-//            criteria = session.createCriteria(cl);
-//            criteria.add(org.hibernate.criterion.Restrictions.eq(whereColumn, whereValue));
-//            T t = (T)criteria.uniqueResult();
-//            session.delete(t);
-//            session.getTransaction().commit();
-//            SystemLog.message("[HIBERNATE] Delete the item:" + t);
-//            id = session.getIdentifier(t);
-//            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return id;
-//    }
-//
-//
-//    @javax.transaction.Transactional
-//    public Serializable deleteRow(T object) {
-//        Serializable id = null;
-//        try{
-//            openSession();
-//            trns = session.beginTransaction();
-//            //session.beginTransaction();
-//            session.delete(object);
-//            session.getTransaction().commit();
-//            SystemLog.message("[HIBERNATE] Delete the item:" + object);
-//            id = session.getIdentifier(object);
-//            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
-//        } catch (RuntimeException e) {
-//            if (trns != null) { trns.rollback();}
-//            SystemLog.exception(e);
-//        } finally {
-//            reset();
-//        }
-//        return id;
-//    }
+    @javax.transaction.Transactional
+    public <T> Serializable insertRow(T object) {
+        Serializable id = null;
+        try {
+            openSession();
+            trns = session.beginTransaction();
+            session.beginTransaction();
+            session.save(object);
+            session.getTransaction().commit();
+            SystemLog.message("[HIBERNATE] Insert the item:" + object);
+            id = session.getIdentifier(object);
+            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return id;
+    }
+
+    @SuppressWarnings("unchecked")
+    public  T selectRow(Serializable id){
+        T object = null;
+        try {
+            openSession();
+            trns = session.beginTransaction();
+            criteria = session.createCriteria(cl);
+            //WORK
+            try {
+                criteria.add(org.hibernate.criterion.Restrictions.eq("doc_id", id));
+                List<T> results = criteria.list();
+                SystemLog.message("[HIBERNATE] Select the item:" + results.get(0));
+            }catch(Exception e) {
+                SystemLog.warning(e.getMessage());
+                if (trns != null) { trns.rollback();}
+                //retry for specific exception....
+                if(e.getMessage().contains("java.net.MalformedURLException: no protocol")){
+                    String url = StringKit.findWithRegex(e.getMessage(),"\\[(.*?)\\]").replace("[","").replace("]","");
+                    updateRow("url","http://"+url,"doc_id", id);
+                }
+            }
+            //NOT WORK
+            //object = (T) criteria.setFirstResult((Integer) id);
+            //SystemLog.message("[HIBERNATE] Select the item:" + object.toString());
+            object = (T) session.load(cl, id);
+            SystemLog.message("[HIBERNATE] GeoDocument you find:" + object.toString());
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return object;
+    }
 
 
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public List<T> selectRows() {
+        List<T> listT = new ArrayList<>();
+        try {
+            openSession();
+            trns = session.beginTransaction();
+            if(specificCriteria==null){
+                criteria = session.createCriteria(cl);
+            }else{
+                criteria =specificCriteria;
+            }
+            listT =  criteria.list();
+            if(listT.size() == 0){
+                SystemLog.warning("[HIBERNATE] The returned list is empty!1");
+            }
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return listT;
+    }
+
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public List<T> selectRows(String nameColumn,int limit,int offset) {
+        List<T> listT = new ArrayList<>();
+        try {
+            openSession();
+            sql = "SELECT "+nameColumn+" FROM "+mySelectTable+"";
+            SQLQuery = session.createSQLQuery(sql);
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
+            trns = session.beginTransaction();
+            criteria = session.createCriteria(cl);
+            listT = query.list();
+            if(listT.size() == 0){
+                SystemLog.warning("[HIBERNATE] The returned list is empty!1");
+            }
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return listT;
+    }
 
 
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public int getCount() {
+        Object result = null;
+        try {
+            openSession();
+            trns = session.beginTransaction();
+            //session.beginTransaction();
+            criteria = session.createCriteria(cl);
+            criteria.setProjection(org.hibernate.criterion.Projections.rowCount());
+            result = criteria.uniqueResult();
+            SystemLog.message("[HIBERNATE] The count of employees is :" + result);
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return (int)result;
+    }
 
 
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public Serializable updateRow(String nameColumn,Object newValue,String whereColumn, Object whereValue) {
+        Serializable id = null;
+        try{
+            openSession();
+            trns = session.beginTransaction();
+            //session.beginTransaction();
+            /*
+            criteria = session.createCriteria(cl);
+            criteria.add(org.hibernate.criterion.Restrictions.eq(whereColumn, whereValue));
+            T t = (T)criteria.uniqueResult();
+            //t.setName("Abigale");
+            //t = object;
+            session.saveOrUpdate(t);
+            session.getTransaction().commit();
+            SystemLog.message("[HIBERNATE] Update the item:" + t.toString());
+            id = session.getIdentifier(t);
+            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
+            */
+            String hqlUpdate = "update "+getTableNameFromSessionFactory(sessionFactory,cl)+" set " + nameColumn +
+                    " = '"+ newValue +"' where " + whereColumn + " = "+whereValue+"";
+            int updatedEntities = session.createQuery( hqlUpdate ).executeUpdate();
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return id;
+    }
 
 
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public Serializable updateRow(T object) {
+        Serializable id = null;
+        try{
+            openSession();
+            trns = session.beginTransaction();
+            //session.beginTransaction();
+            session.saveOrUpdate(object);
+            session.getTransaction().commit();
+            SystemLog.message("[HIBERNATE] Update the item:" + object.toString());
+            id = session.getIdentifier(object);
+            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return id;
+    }
 
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public Serializable deleteRow(String whereColumn, Object whereValue) {
+        Serializable id = null;
+        try{
+            openSession();
+            trns = session.beginTransaction();
+            //session.beginTransaction();
+            criteria = session.createCriteria(cl);
+            criteria.add(org.hibernate.criterion.Restrictions.eq(whereColumn, whereValue));
+            T t = (T)criteria.uniqueResult();
+            session.delete(t);
+            session.getTransaction().commit();
+            SystemLog.message("[HIBERNATE] Delete the item:" + t);
+            id = session.getIdentifier(t);
+            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return id;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @javax.transaction.Transactional
+    public Serializable deleteRow(T object) {
+        Serializable id = null;
+        try{
+            openSession();
+            trns = session.beginTransaction();
+            //session.beginTransaction();
+            session.delete(object);
+            session.getTransaction().commit();
+            SystemLog.message("[HIBERNATE] Delete the item:" + object);
+            id = session.getIdentifier(object);
+            SystemLog.message("[HIBERNATE] Get the identifier:" + id);
+        } catch (RuntimeException e) {
+            if (trns != null) { trns.rollback();}
+            SystemLog.exception(e);
+        } finally {
+            reset();
+        }
+        return id;
+    }
+
+
+    //NEW FUNCTION
+    public String getTableNameFromSessionFactory(SessionFactory sessionFactory,Class<?> thisClass){
+        org.hibernate.metadata.ClassMetadata hibernateMetadata = sessionFactory.getClassMetadata(thisClass);
+        if (hibernateMetadata == null){
+            return null;
+        }
+        if (hibernateMetadata instanceof org.hibernate.persister.entity.AbstractEntityPersister){
+            org.hibernate.persister.entity.AbstractEntityPersister persister =
+                    (org.hibernate.persister.entity.AbstractEntityPersister) hibernateMetadata;
+            //String tableName = persister.getTableName();
+            return persister.getTableName();
+        }
+        return null;
+    }
+
+    public String[] getColumnsNamesFromSessionFactory(SessionFactory sessionFactory,Class<?> thisClass){
+        org.hibernate.metadata.ClassMetadata hibernateMetadata = sessionFactory.getClassMetadata(thisClass);
+        if (hibernateMetadata == null){
+            return null;
+        }
+        if (hibernateMetadata instanceof org.hibernate.persister.entity.AbstractEntityPersister){
+            org.hibernate.persister.entity.AbstractEntityPersister persister =
+                    (org.hibernate.persister.entity.AbstractEntityPersister) hibernateMetadata;
+            //String[] columnNames = persister.getKeyColumnNames();
+            return persister.getKeyColumnNames();
+        }
+        return null;
+    }
 }//end of the class
 
