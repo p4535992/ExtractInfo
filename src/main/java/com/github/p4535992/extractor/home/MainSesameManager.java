@@ -96,6 +96,8 @@ public class MainSesameManager {
                 , "csv", true);
         sesame.executeQuerySPARQLFromString(query);
         sesame.shutDownRepository();
+
+
         /*Sesame28Kit sesame2 = Sesame28Kit.getInstance();
         File file = new File("C:\\Users\\tenti\\Documents\\GitHub\\EAT\\ExtractInfo\\src\\main\\java\\com\\github\\p4535992\\extractor\\home\\testSesame.ttl");
         if(file.exists()) {
