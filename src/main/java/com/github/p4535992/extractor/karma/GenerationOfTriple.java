@@ -128,7 +128,7 @@ public class GenerationOfTriple {
 
     /**
      * Method to generate triple file with Web-Karma API from a local file:JSON,CSV,XML,AVRO.
-     * @param sourceTypeKarma the Source Type of karma e.g. "DB" -> A database.
+     * @param sourceTypeKarma the Source Type of karma e.g. "DB"  A database.
      * @param pathToFileKarmaModel the path to the model R2RML turtle of Karma e.g. "karma_files/model/".
      * @param pathFileTripleOfOutput the path to the output file of triple e.g. "karma_files/output/".
      * @param dbTypeKarma the type of databse sue with KARMA e.g. "MySQL","Oracle","SQLServer","PostGIS".
