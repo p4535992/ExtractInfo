@@ -1,7 +1,7 @@
 package com.github.p4535992.extractor.karma;
 import com.github.p4535992.util.collection.CollectionKit;
 import com.github.p4535992.util.encoding.EncodingUtil;
-import com.github.p4535992.util.file.FileUtil;
+import com.github.p4535992.util.file.impl.FileUtil;
 import com.github.p4535992.util.log.SystemLog;
 import edu.isi.karma.kr2rml.URIFormatter;
 import edu.isi.karma.kr2rml.mapping.R2RMLMappingIdentifier;
