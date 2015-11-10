@@ -1,7 +1,7 @@
 package com.github.p4535992.extractor.karma;
 import com.github.p4535992.util.collection.CollectionKit;
 import com.github.p4535992.util.file.impl.EncodingUtil;
-import com.github.p4535992.util.file.impl.FileUtilities;
+import com.github.p4535992.util.file.impl.FileUtil;
 import com.github.p4535992.util.log.SystemLog;
 import edu.isi.karma.kr2rml.URIFormatter;
 import edu.isi.karma.kr2rml.mapping.R2RMLMappingIdentifier;
@@ -93,7 +93,7 @@ public class GenerationOfTriple {
 
             pathOut =
                     System.getProperty("user.dir")+File.separator+"karma_files"+File.separator+
-                            "output"+File.separator+ FileUtilities.getFilenameWithoutExt(pathOut)+"."+ FileUtilities.getExtension(pathOut);
+                            "output"+File.separator+ FileUtil.getFilenameWithoutExt(pathOut)+"."+ FileUtil.getExtension(pathOut);
             SystemLog.message("...file of triples created with name:" + pathOut);
 
 
@@ -108,16 +108,16 @@ public class GenerationOfTriple {
             File filePathTriple = new File(pathOut);
             List<String> lines = EncodingUtil.convertUnicodeEscapeToUTF8(filePathTriple);
             String output = System.getProperty("user.dir")+File.separator+"karma_files"+File.separator+"output"+File.separator+
-                    FileUtilities.getFilename(pathOut).replace("." + FileUtilities.getExtension(pathOut), "-UTF8."
-                            + FileUtilities.getExtension(pathOut));
+                    FileUtil.getFilename(pathOut).replace("." + FileUtil.getExtension(pathOut), "-UTF8."
+                            + FileUtil.getExtension(pathOut));
             SystemLog.message("...file of triples created in the path:" + output);
             EncodingUtil.writeLargerTextFileWithReplace2(output, lines);
             SystemLog.message("...converted the file of triple to UTF8 Format");
             File f = new File(output);
             //RIPULIAMO LETRIPLE DALLE LOCATION SENZA COORDINATE CON JENA
             SystemLog.message("Re-clean infodocument triples from the Location information  without coordinates from the file:" + output);
-            SystemLog.message(FileUtilities.getFilenameWithoutExt(f)+","+ FileUtilities.getPath(f)+","+ FileUtilities.getFilenameWithoutExt(f)
-                    + "-c" + "," + FileUtilities.getExtension(f));
+            SystemLog.message(FileUtil.getFilenameWithoutExt(f)+","+ FileUtil.getPath(f)+","+ FileUtil.getFilenameWithoutExt(f)
+                    + "-c" + "," + FileUtil.getExtension(f));
 
             filePathTriple.delete();
             return f;
@@ -166,7 +166,7 @@ public class GenerationOfTriple {
 
             pathOut =
                     System.getProperty("user.dir")+File.separator+"karma_files"+File.separator+
-                            "output"+File.separator+ FileUtilities.getFilenameWithoutExt(pathOut)+"."+ FileUtilities.getExtension(pathOut);
+                            "output"+File.separator+ FileUtil.getFilenameWithoutExt(pathOut)+"."+ FileUtil.getExtension(pathOut);
             SystemLog.message("...file of triples created with name:" + pathOut);
 
             File filePathTriple = new File(pathOut);
@@ -176,16 +176,16 @@ public class GenerationOfTriple {
             List<String> lines = EncodingUtil.convertUnicodeEscapeToUTF8(filePathTriple);
             String output =
                     System.getProperty("user.dir")+File.separator+"karma_files"+File.separator+"output"+File.separator+
-                            FileUtilities.getFilename(pathOut).replace("." + FileUtilities.getExtension(pathOut), "-UTF8." +
-                                    FileUtilities.getExtension(pathOut));
+                            FileUtil.getFilename(pathOut).replace("." + FileUtil.getExtension(pathOut), "-UTF8." +
+                                    FileUtil.getExtension(pathOut));
             SystemLog.message("...file of triples created in the path:" + output);
             EncodingUtil.writeLargerTextFileWithReplace2(output, lines);
             SystemLog.message("...converted the file of triple to UTF8 Format");
             File f = new File(output);
             //RIPULIAMO LETRIPLE DALLE LOCATION SENZA COORDINATE CON JENA
             SystemLog.message("Re-clean infodocument triples from the Location information  without coordinates from the file:" + output);
-            SystemLog.message(FileUtilities.getFilenameWithoutExt(f)+","+ FileUtilities.getPath(f)+","+ FileUtilities.getFilenameWithoutExt(f)
-                    + "-c" + "," + FileUtilities.getExtension(f));
+            SystemLog.message(FileUtil.getFilenameWithoutExt(f)+","+ FileUtil.getPath(f)+","+ FileUtil.getFilenameWithoutExt(f)
+                    + "-c" + "," + FileUtil.getExtension(f));
             filePathTriple.delete();
             return f;
         }catch(Exception ex){
@@ -208,7 +208,7 @@ public class GenerationOfTriple {
             // You can add multiple models using this API.
             //"people-model" -> "/files/models/people-model.ttl".
             R2RMLMappingIdentifier modelIdentifier = new R2RMLMappingIdentifier(
-                    FileUtilities.getFilenameWithoutExt(karmaModel), karmaModel.toURI().toURL());
+                    FileUtil.getFilenameWithoutExt(karmaModel), karmaModel.toURI().toURL());
 
             // modelIdentifier : Provides a name and location of the model file
             rdfGenerator.addModel(modelIdentifier);
@@ -216,14 +216,14 @@ public class GenerationOfTriple {
             PrintWriter pw = new PrintWriter(sw);
             N3KR2RMLRDFWriter writer = new N3KR2RMLRDFWriter(new URIFormatter(), pw);
             RDFGeneratorRequest request = new RDFGeneratorRequest(
-                    FileUtilities.getFilenameWithoutExt(karmaModel), //"people-model"
-                    FileUtilities.getLocalPath(fileToTriplify.getAbsolutePath())); //"files/data/people.json"
+                    FileUtil.getFilenameWithoutExt(karmaModel), //"people-model"
+                    FileUtil.getLocalPath(fileToTriplify.getAbsolutePath())); //"files/data/people.json"
             //inputData : Input Data as String
             //request.setInputData(inputData);
             //inputStream: Input data as a Stream
             //request.setInputStream(in);
             //inputFile: Input data file
-            request.setInputFile(new File(FileUtilities.convertFileToUri(fileToTriplify)));
+            request.setInputFile(new File(FileUtil.convertFileToUri(fileToTriplify)));
             //addProvenance -> flag to indicate if provenance information should be added to the RDF
             request.setAddProvenance(true);
             //dataType: Valid values: CSV,JSON,XML,AVRO
@@ -263,17 +263,17 @@ public class GenerationOfTriple {
             GenericRDFGenerator rdfGenerator = new GenericRDFGenerator("DEFAULT_TEST");
             //"people-model" -> "/files/models/people-model.ttl".
             R2RMLMappingIdentifier modelIdentifier = new R2RMLMappingIdentifier(
-                    FileUtilities.getFilenameWithoutExt(karmaModel), karmaModel.toURI().toURL());
+                    FileUtil.getFilenameWithoutExt(karmaModel), karmaModel.toURI().toURL());
             rdfGenerator.addModel(modelIdentifier);
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             N3KR2RMLRDFWriter writer = new N3KR2RMLRDFWriter(new URIFormatter(), pw);
             RDFGeneratorRequest request;
-            fileToTriplify = FileUtilities.createFile(fileToTriplify);
+            fileToTriplify = FileUtil.createFile(fileToTriplify);
             if (fileToTriplify!=null && fileToTriplify .exists()) {
                 request = new RDFGeneratorRequest(
-                        FileUtilities.getFilenameWithoutExt(karmaModel), //"people-model"
-                        FileUtilities.getLocalPath(fileToTriplify.getAbsolutePath())); //"files/data/people.json"
+                        FileUtil.getFilenameWithoutExt(karmaModel), //"people-model"
+                        FileUtil.getLocalPath(fileToTriplify.getAbsolutePath())); //"files/data/people.json"
                 request.setInputStream(inStream);
                 request.setAddProvenance(true);
                 if(fileToTriplify .getAbsolutePath().toLowerCase().endsWith(".json")) request.setDataType(InputType.JSON);
@@ -312,17 +312,17 @@ public class GenerationOfTriple {
             GenericRDFGenerator rdfGenerator = new GenericRDFGenerator("DEFAULT_TEST");
             //"people-model" -> "/files/models/people-model.ttl".
             R2RMLMappingIdentifier modelIdentifier = new R2RMLMappingIdentifier(
-                    FileUtilities.getFilenameWithoutExt(karmaModel), karmaModel.toURI().toURL());
+                    FileUtil.getFilenameWithoutExt(karmaModel), karmaModel.toURI().toURL());
             rdfGenerator.addModel(modelIdentifier);
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             N3KR2RMLRDFWriter writer = new N3KR2RMLRDFWriter(new URIFormatter(), pw);
             RDFGeneratorRequest request;
-            fileToTriplify = FileUtilities.createFile(fileToTriplify);
+            fileToTriplify = FileUtil.createFile(fileToTriplify);
             if (fileToTriplify!=null && fileToTriplify .exists()) {
                 request = new RDFGeneratorRequest(
-                        FileUtilities.getFilenameWithoutExt(karmaModel), //"people-model"
-                        FileUtilities.getLocalPath(fileToTriplify.getAbsolutePath())); //"files/data/people.json"
+                        FileUtil.getFilenameWithoutExt(karmaModel), //"people-model"
+                        FileUtil.getLocalPath(fileToTriplify.getAbsolutePath())); //"files/data/people.json"
                 request.setInputData(stringText);
                 request.setAddProvenance(true);
                 if(fileToTriplify .getAbsolutePath().toLowerCase().endsWith(".json")) request.setDataType(InputType.JSON);

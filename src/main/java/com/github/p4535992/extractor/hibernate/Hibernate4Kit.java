@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 /**
@@ -47,7 +46,7 @@ public class Hibernate4Kit<T> {
     protected Interceptor inter; //support parameter
     protected static Connection connection;
     //@PersistenceContext(unitName=UtilitiesModel.JPA_PERSISTENCE_UNIT)
-    protected EntityManager entityManager;
+    protected javax.persistence.EntityManager entityManager;
 
     @SuppressWarnings({"unchecked","rawtypes"})
     public Hibernate4Kit(){

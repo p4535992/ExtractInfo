@@ -2,7 +2,7 @@ package com.github.p4535992.extractor.home;
 
 import com.github.p4535992.extractor.JenaInfoDocument;
 import com.github.p4535992.extractor.karma.GenerationOfTriple;
-import com.github.p4535992.util.file.impl.FileUtilities;
+import com.github.p4535992.util.file.impl.FileUtil;
 import com.github.p4535992.util.log.SystemLog;
 
 import java.io.File;
@@ -78,10 +78,10 @@ public class MainGenerationTriple {
             try {
                 //code for clean up the triple file generate from karma.
                 JenaInfoDocument.readQueryAndCleanTripleInfoDocument(
-                        FileUtilities.getFilenameWithoutExt(f), //filenameInput
-                        FileUtilities.getPath(f), //filepath
-                        FileUtilities.getFilenameWithoutExt(f) + "-c", //fileNameOutput
-                        FileUtilities.getExtension(f), //inputFormat n3
+                        FileUtil.getFilenameWithoutExt(f), //filenameInput
+                        FileUtil.getPath(f), //filepath
+                        FileUtil.getFilenameWithoutExt(f) + "-c", //fileNameOutput
+                        FileUtil.getExtension(f), //inputFormat n3
                         "ttl" //outputFormat "ttl"
                 );
                 //delete not filter file of triples
