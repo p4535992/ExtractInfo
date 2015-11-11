@@ -161,16 +161,16 @@
 
     <dependencies>
         <!-- Module utility  -->
-       <!-- <dependency>
+        <dependency>
             <groupId>com.github.p4535992</groupId>
             <artifactId>utility</artifactId>
-        </dependency>-->
+        </dependency>
 
         <!-- Module gate-basic -->
-     <!--   <dependency>
+        <dependency>
             <groupId>com.github.p4535992</groupId>
             <artifactId>gate-basic</artifactId>
-        </dependency>-->
+        </dependency>
 
         <!-- MySQL -->
         <dependency>
