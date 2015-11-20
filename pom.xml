@@ -45,7 +45,15 @@
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
-        </repository>     
+        </repository>   
+        <repository>
+            <id>Karma-offline</id>
+            <url>https://github.com/usc-isi-i2/Web-Karma/tree/master/karma-offline</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>  
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -288,9 +296,25 @@
             </exclusions>
         </dependency>-->
 
-        <dependency>
+        <!--<dependency>
             <groupId>edu.isi</groupId>
             <artifactId>webkarma</artifactId>
+            <version>${webkarma.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+        <dependency>
+            <groupId>edu.isi</groupId>
+            <artifactId>karma-offline</artifactId>
             <version>${webkarma.version}</version>
             <scope>compile</scope>
             <exclusions>
