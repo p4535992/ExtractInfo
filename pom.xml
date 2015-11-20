@@ -271,7 +271,7 @@
             </exclusions>
         </dependency>-->
         <!-- With Jitpack -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.usc-isi-i2</groupId>
             <artifactId>Web-Karma</artifactId>
             <version>v2.030 Patch 4: Handles cases when input is missing columns in some rows</version>
@@ -286,9 +286,9 @@
                     <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
-       <!--<dependency>
+        <dependency>
             <groupId>edu.isi</groupId>
             <artifactId>webkarma</artifactId>
             <version>${webkarma.version}</version>
@@ -303,7 +303,7 @@
                     <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
      <!--   <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
