@@ -1,8 +1,8 @@
 package com.github.p4535992.extractor.object.impl.hibernate.generic;
 
-import com.github.p4535992.extractor.hibernate.Hibernate43Kit;
 import com.github.p4535992.extractor.object.dao.hibernate.generic.IGenericHibernateDao;
 import com.github.p4535992.util.bean.BeansKit;
+import com.github.p4535992.util.hibernate.Hibernate43Utilities;
 import com.github.p4535992.util.string.StringUtilities;
 import org.hibernate.*;
 import org.hibernate.criterion.Criterion;
@@ -31,8 +31,6 @@ public class GenericHibernateDaoImpl<T> implements IGenericHibernateDao<T> {
     private static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(GenericHibernateDaoImpl.class);
 
     protected Class<T> cl;
-    protected String clName;
-    protected String query;
     //HIBERNATE FIELD
 
     protected String myInsertTable,mySelectTable;
@@ -48,29 +46,26 @@ public class GenericHibernateDaoImpl<T> implements IGenericHibernateDao<T> {
     protected org.springframework.orm.hibernate4.HibernateTemplate hibernateTemplate;
     protected org.springframework.orm.hibernate4.LocalSessionFactoryBuilder sessionBuilder;
     protected org.springframework.orm.hibernate4.SessionHolder sessionHolder;
-    protected DriverManagerDataSource driverManag;
+
     @PersistenceContext
     protected EntityManager em;
     protected org.springframework.context.ApplicationContext context;
-    protected String beanIdSessionFactory;
-    protected String beanIdSpringContext;
+    protected String beanIdSessionFactory,beanIdSpringContext;
 
-    protected Hibernate43Kit<T> hbs;
+    protected Hibernate43Utilities<T> hbs;
     protected File contextFile;
 
     //CONSTRUCTOR
-    @SuppressWarnings({"unchecked","rawtypes"})
     public GenericHibernateDaoImpl() {
         java.lang.reflect.Type t = getClass().getGenericSuperclass();
         java.lang.reflect.ParameterizedType pt = (java.lang.reflect.ParameterizedType) t;
         this.cl = (Class) pt.getActualTypeArguments()[0];
-        this.clName = cl.getSimpleName();
-        this.hbs = new Hibernate43Kit(cl);
+        this.hbs = new Hibernate43Utilities<>(cl);
     }
-   @SuppressWarnings({"unchecked","rawtypes"})
+
    public GenericHibernateDaoImpl(Object s) throws FileNotFoundException {
        //super(s); //extend test case????
-       this.hbs = new Hibernate43Kit(cl);
+       this.hbs = new Hibernate43Utilities<>(cl);
        if(context==null){
            loadSpringContext(contextFile.getAbsolutePath());
        }else{
@@ -122,8 +117,8 @@ public class GenericHibernateDaoImpl<T> implements IGenericHibernateDao<T> {
    }
 
     //@Override
-   public void setDriverManager(String driver, String typeDb, String host, String port, String user, String pass, String database) {
-        driverManag = new DriverManagerDataSource();
+   public void setDataSourceWithSpring(String driver, String typeDb, String host, String port, String user, String pass, String database) {
+        org.springframework.jdbc.datasource.DriverManagerDataSource driverManag = new DriverManagerDataSource();
         driverManag.setDriverClassName(driver);//"com.sql.jdbc.Driver"
         driverManag.setUrl("" + typeDb + "://" + host + ":" + port + "/" + database); //"jdbc:sql://localhost:3306/jdbctest"
         driverManag.setUsername(user);
@@ -327,7 +322,7 @@ public class GenericHibernateDaoImpl<T> implements IGenericHibernateDao<T> {
     @Override
     public void setInterceptor(Class<? extends Interceptor> interceptor){
         doInHibernate();
-        hbs.setNewInterceptor(interceptor);
+        hbs.setSessionWithInterceptor(interceptor);
     }
 
     //SUPPORT

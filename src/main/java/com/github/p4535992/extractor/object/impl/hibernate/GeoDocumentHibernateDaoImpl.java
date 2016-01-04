@@ -40,7 +40,7 @@ public class GeoDocumentHibernateDaoImpl extends GenericHibernateDaoImpl<GeoDocu
 
     @Override
     public void setDriverManager(String driver, String typeDb, String host,String port, String user, String pass, String database) {
-        super.setDriverManager(driver, typeDb, host, port, user, pass, database);
+        super.setDataSourceWithSpring(driver, typeDb, host, port, user, pass, database);
     }
 
     @Override
