@@ -1,6 +1,7 @@
-package com.github.p4535992.extractor.karma;
+package com.github.p4535992.extractor.estrattori.karma;
 
 
+import com.github.p4535992.util.file.FileUtilities;
 import edu.isi.karma.kr2rml.URIFormatter;
 import edu.isi.karma.kr2rml.mapping.R2RMLMappingIdentifier;
 import edu.isi.karma.kr2rml.writer.N3KR2RMLRDFWriter;
@@ -13,6 +14,7 @@ import edu.isi.karma.webserver.KarmaException;
 import java.io.*;
 
 import java.lang.reflect.Array;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -105,8 +107,21 @@ public class GenerationRDFSupport {
     public File generateRDF(String sourceTypeKarma, String pathToFileKarmaModel,
                              String pathFileTripleOfOutput, String dbTypeKarma, String hostname, String username, String password,
                              String port, String nameOfDatabase, String nameOfTable) throws IOException {
-        String pathOut = pathFileTripleOfOutput + "";
 
+        if(!checkJenaVersionForWorkWithWebKarma(new File(pathToFileKarmaModel).toURI().toURL())){
+            return null;
+        }
+
+        //Path path = Paths.get(pathFileTripleOfOutput);
+
+        if(!FileUtilities.isFileExists(pathFileTripleOfOutput)) {
+            boolean b2 = new File(pathFileTripleOfOutput).createNewFile();
+        }
+
+        File output = new File(pathFileTripleOfOutput);
+
+        //String pathOut = pathFileTripleOfOutput + "";
+        String pathOut = output.getAbsolutePath();
         String[] value = new String[]{
                 sourceTypeKarma, pathToFileKarmaModel, pathOut,
                 dbTypeKarma, hostname, username, password,
@@ -473,4 +488,18 @@ public class GenerationRDFSupport {
         support.generateRDF(r2rml,output,conn,"infodocument_2015_09_18");
 
     }*/
+
+    //Check the right version jena of karma
+    //com.hp.hpl.jena.rdf.model.Model model = loadSourceModelIntoJenaModel(new File(MODEL_KARMA).toURL());
+    public static Boolean checkJenaVersionForWorkWithWebKarma(URL modelURL) throws IOException {
+        try {
+            com.hp.hpl.jena.rdf.model.Model model = com.hp.hpl.jena.rdf.model.ModelFactory.createDefaultModel();
+            InputStream s = modelURL.openStream();
+            model.read(s, (String) null, "TURTLE");
+            return true;
+        }catch(Exception e){
+            logger.error("ATTENTION: You are not using the right version of Jena for work with karma-offline");
+            return false;
+        }
+    }
 }

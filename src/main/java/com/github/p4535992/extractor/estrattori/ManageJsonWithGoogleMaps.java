@@ -1,4 +1,4 @@
-package com.github.p4535992.extractor;
+package com.github.p4535992.extractor.estrattori;
 import com.github.p4535992.extractor.object.model.GeoDomainDocument;
 import com.github.p4535992.extractor.setInfoParameterIta.SetNazioneELanguage;
 import com.github.p4535992.util.http.HttpUtilities;
@@ -10,7 +10,6 @@ import com.github.p4535992.util.string.StringUtilities;
 import org.json.JSONException;
 
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;

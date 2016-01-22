@@ -1,4 +1,4 @@
-package com.github.p4535992.extractor;
+package com.github.p4535992.extractor.estrattori;
 
 import com.github.p4535992.util.repositoryRDF.jena.Jena3Utilities;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -99,7 +99,7 @@ public class JenaInfoDocument {
 
         logger.info(SPARQL_NO_WGS84COORDS);
         //CREA IL TUO MODELLO DI JENA A PARTIRE DA UN FILE
-        Model model = Jena3Utilities.loadFileTripleToModel(filenameInput, filepath, inputFormat);
+        Model model = Jena3Utilities.toModel(filenameInput, filepath, inputFormat);
         //ESEGUI LA QUERY SPARQL
         Model myGraph = Jena3Utilities.execSparqlConstructorOnModel(SPARQL_NO_WGS84COORDS, model);
         StmtIterator iter = myGraph.listStatements();

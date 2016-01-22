@@ -5,7 +5,7 @@
  * Dato un'indirizzo restituisce le coordinate GPS. 
  * UTILE COME ALTERNATIVA A GOOGLE MAPS E COMPLETAMENTE OPEN SOURCE
  */
-package com.github.p4535992.extractor;
+package com.github.p4535992.extractor.estrattori;
 
 import com.github.p4535992.extractor.object.support.LatLng;
 import java.io.IOException;
