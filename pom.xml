@@ -172,11 +172,11 @@
 
     <dependencies>
         <!-- Module databse-basic  -->
-       <!-- <dependency>
+       <dependency>
             <groupId>com.github.p4535992</groupId>
             <artifactId>database-basic</artifactId>
             <version>${com.github.p4535992.database-basic.version}</version>
-        </dependency>-->
+        </dependency>
 
         <!-- Module utility  -->
         <dependency>
