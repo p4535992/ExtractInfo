@@ -96,6 +96,10 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>ossrh2</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/com/univocity/univocity-parsers/2.0.0-SNAPSHOT/</url>
+        </repository>
     </repositories>
 
     <properties>
