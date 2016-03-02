@@ -17,7 +17,17 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="gate" level="WARN" additivity="false">
+	<!-- GATE Logging -->
+	<logger name="gate" level="info">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="gate.creole.SerialController" level="info">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="gate.jape" level="info">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="gate.util.profile.Profiler" level="info">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
