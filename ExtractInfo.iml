@@ -11,9 +11,9 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="utility" />
     <orderEntry type="library" name="Maven: com.github.p4535992:database-basic:1.6.8" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.codehaus.groovy:groovy-all:2.3.11" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.38" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.hsqldb:hsqldb:2.3.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.h2database:h2:1.4.191" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.hibernate:hibernate-osgi:5.0.7.Final" level="project" />
@@ -36,11 +36,9 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.hibernate:hibernate-validator:5.3.0.Alpha1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml:classmate:1.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: com.univocity:univocity-parsers:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.opencsv:opencsv:3.7" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
-    <orderEntry type="module" module-name="utility" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.persistence:eclipselink:2.5.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.persistence:javax.persistence:2.0.0" level="project" />
@@ -193,6 +191,7 @@
     <orderEntry type="library" name="Maven: javax.interceptor:javax.interceptor-api:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.fusesource.jansi:jansi:1.11" level="project" />
     <orderEntry type="library" name="Maven: uk.org.lidalia:sysout-over-slf4j:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.univocity:univocity-parsers:2.0.0" level="project" />
     <orderEntry type="module" module-name="gate-basic" />
     <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.gate:gate-core:8.1" level="project" />
@@ -289,6 +288,7 @@
     <orderEntry type="library" name="Maven: commons-net:commons-net:1.4.1" level="project" />
     <orderEntry type="library" name="Maven: commons-el:commons-el:1.0" level="project" />
     <orderEntry type="library" name="Maven: edu.isi:karma-util:0.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.json-lib:json-lib:jdk15:2.3" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.0" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
